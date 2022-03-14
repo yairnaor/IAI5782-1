@@ -1,11 +1,7 @@
 '''
-The state is a list of 2 items: the board, the path
-The target for 8-puzzle is: (zero is the hole)
-012
-345
-678
+Yair Naor - 208983783
+Amitai Salomon - 316336445
 '''
-
 import random
 import math
 
@@ -60,35 +56,35 @@ def if_legal(x, m):  # gets a board and a move and makes the move if it's legal
         x[z + n] = 0
 
 
-
 # This is your HW
 def hdistance(s):  # the heuristic value of s
 
     n = math.sqrt(len(s[0]))
     sum = 0
+    # we go through each number in cube to check
     for i in s[0]:
+        # y gets the expected row of the current index
         y = i % n
+        # x receives the row expected from the actual content of the current index
         x = s[0][i] % n
 
         z = 0
         w = 0
         j = 0
+        # first while inserts into z the expected column of the current index
         while j < n:
             if j * n <= i < (j + 1) * n:
                 z = j
             j += 1
-
+        # second while inserts into w the expected column of the content in the current index
         j = 0
         while j < n:
             if j * n <= s[0][i] < (j + 1) * n:
                 w = j
             j += 1
-
-        col = abs(y - x)
-        row = abs(w - z)
-        sum += max(row, col)
+        # we check the max between the row and column difference and add it to sum.
+        sum += max(abs(w - z), abs(y - x))
     return sum
-
 
 
 '''
@@ -118,6 +114,7 @@ def hdistance(s):
 ריחוק של מספר ממיקומו גורם לכך שאנו מבחינה היוריסטית מתרחקים מהמטרה, ונרצה לתת לכך עדיפות קטנה יותר.
 לעומת זאת ההיוריסטיקה הנתונה מההרצאה, אינה נותנת עדיפות לכיוון המטרה, אלא מסדרת את המצבים לפי כמות השוני שלהם ביחס למצב המטרה.
 כלומר, אם במידה מסוימת מספר הגיע אל מקומו הסופי מצב זה יקבל עדיפות גדולה יותר.
-בכך אין הבדל גדול בין המצבים, מכיוון שמצב בו הזזנו את המספרים יותר קרוב למטרה אך המספרים עדיין אינם במקומם הסופי, יחשב באותה צורה בעדיפותו למקרה הקודם לו.
+בכך אין הבדל גדול בין המצבים, מכיוון שמצב בו הזזנו את המספרים יותר קרוב למטרה אך המספרים עדיין אינם במקומם הסופי,
+יחשב באותה צורה בעדיפותו למקרה הקודם לו.
 
 '''
