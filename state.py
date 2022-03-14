@@ -38,23 +38,26 @@ def is_target(x):
     n = len(x[0])
     return x[0] == list(range(n))
 
-
 def hdistance(s):
     n = math.sqrt(len(s[0]))
     sum = 0
-    for i in len(s[0]):
+    for i in s[0]:
         y = i % n
         x = s[0][i] % n
 
         z = 0
         w = 0
-        for j in n:
+        j = 0
+        while j < n:
             if j * n <= i < (j + 1) * n:
                 z = j
+            j += 1
 
-        for j in n:
+        j = 0
+        while j < n:
             if j * n <= s[0][i] < (j + 1) * n:
                 w = j
+            j += 1
 
         col = abs(y - x)
         row = abs(w - z)
