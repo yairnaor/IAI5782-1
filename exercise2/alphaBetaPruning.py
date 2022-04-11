@@ -1,7 +1,7 @@
 import game
 import copy
 
-DEPTH = 2
+DEPTH = 4
 
 
 def go(s):
