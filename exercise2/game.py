@@ -35,7 +35,7 @@ def create():
             row = row + [random.randrange(-5, 16)]
         board = board + [row]
 
-    last_move[ROW] = random.randrange(0, SIZE)
+    last_move[ROW] = random.randrange(0, SIZE)      # determine the starting place on the board
     last_move[COLUMN] = random.randrange(0, SIZE)
 
     board[last_move[ROW]][last_move[COLUMN]] = "X"         # the starting point on the board
@@ -80,9 +80,9 @@ def printState(state):
 def isFinished(state):
     # Returns True if the game ended
 
-    if isHumTurn(state):       # checks if the choice has to be from row
-        row = state[LAST_MOVE][ROW]
-        for column in state[BOARD][row]:
+    if isHumTurn(state):                        # checks if the choice has to be from row
+        row = state[LAST_MOVE][ROW]             # then check the whole column to see if there are any open slots too
+        for column in state[BOARD][row]:        # choose from
             if column != " " or column != "X":
                 return False
     else:
@@ -112,14 +112,19 @@ def makeMove(state, move):
     if isHumTurn(state):       # checks if the choice has to be from row
         row = state[LAST_MOVE][ROW]
         col = state[LAST_MOVE][COLUMN]
+        # if the move to be made is in a legal place
         if state[BOARD][row][move] != " " and state[BOARD][row][move] != "X":
             state[H_POINTS] += state[BOARD][row][move]
+            # then we mark the chosen slot with X so the next turn will know the specific last choice
+            # and we also mark what was the last move to " " so we'll know it's not an option and also
+            # that it's not the last move
         state[BOARD][row][move] = "X"
         state[BOARD][row][col] = " "
 
         state[TURN] = COMPUTER
-        state[LAST_MOVE][COLUMN] = move
+        state[LAST_MOVE][COLUMN] = move     # for next turn we update the last move
     else:
+        # same as the beginning of the function just from the computers turn.
         row = state[LAST_MOVE][ROW]
         col = state[LAST_MOVE][COLUMN]
         if state[BOARD][move][col] != " " and state[BOARD][move][col] != "X":
@@ -140,8 +145,7 @@ def inputMove(state):
     while flag:
         print("Last move was: row", row, ", column", col)
         print("Enter your next move: (choose a number 1 -", SIZE, "in row", row, ")")
-        move = int(input())          # chooses between 1 to SIZE of board
-        move -= 1
+        move = int(input()) - 1         # chooses between 1 to SIZE of board. fix of 1 for index of array
         row = state[LAST_MOVE][ROW]
         if move < 0 or SIZE <= move or state[BOARD][row][move] == " " or state[BOARD][row][move] == "X":
             print("Illegal move.")
@@ -155,6 +159,7 @@ def getNext(state):
     ns = []
     if isHumTurn(state):
         row = state[LAST_MOVE][ROW]
+        # for each column in the row if the move is an option we insert the new option of the state as a move
         for col in range(SIZE):
             if state[BOARD][row][col] != " " or state[BOARD][row][col] != "X":
                 tmp = copy.deepcopy(state)
@@ -162,10 +167,11 @@ def getNext(state):
                 ns += [tmp]
     else:
         col = state[LAST_MOVE][COLUMN]
+        # for each row in the column if the move is an option we insert the new option of the state as a move
         for row in range(SIZE):
             if state[BOARD][row][col] != " " or state[BOARD][row][col] != "X":
                 tmp = copy.deepcopy(state)
                 makeMove(tmp, row)
                 ns += [tmp]
+    return ns                    # return the list of the next state option
 
-    return ns
